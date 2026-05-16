@@ -1,17 +1,809 @@
 <!DOCTYPE html>
-  <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fusion Lab</title>
-    <style>
-      body { font-family: Arial, sans-serif; background: #0d1117; color: #c9d1d9; text-align: center; padding: 50px; }
-    h1 { color: #58a6ff; font-size: 3em; }
-    p { font-size: 1.2em; margin-top: 20px; }
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fusion Lab — arquitetura · tech · vida</title>
+  <meta name="description" content="Reflexões sobre arquitetura, tecnologia, empreendedorismo e a vida que se constrói no meio disso tudo." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <!-- Google AdSense: substitua ca-pub-XXXXXXXXXX pelo seu Publisher ID -->
+  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXX" crossorigin="anonymous"></script> -->
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: #0a0a0a; color: #f0ede8; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+    /* ── LANGUAGE SYSTEM ── */
+    [data-lang] { display: none; }
+    body[data-current-lang="pt"] [data-lang="pt"] { display: revert; }
+    body[data-current-lang="en"] [data-lang="en"] { display: revert; }
+    body[data-current-lang="es"] [data-lang="es"] { display: revert; }
+
+    /* ── SCREENS ── */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ── NAV ── */
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 2rem; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(10,10,10,0.97); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); gap: 1rem; }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; letter-spacing: -0.03em; cursor: pointer; text-decoration: none; color: #f0ede8; flex-shrink: 0; }
+    .nav-logo span { color: #C8FF57; }
+    .nav-logo small { font-size: 0.5rem; font-weight: 400; letter-spacing: .12em; text-transform: uppercase; color: rgba(240,237,232,0.28); display: block; margin-top: -2px; }
+    .nav-center { display: flex; align-items: center; gap: .75rem; flex: 1; justify-content: center; }
+    .nav-tabs { display: flex; border: 1px solid rgba(255,255,255,0.1); border-radius: 100px; overflow: hidden; }
+    .ntab { font-size: 12px; font-weight: 500; padding: 7px 18px; cursor: pointer; color: rgba(240,237,232,0.45); transition: all .2s; border: none; background: transparent; font-family: 'DM Sans', sans-serif; letter-spacing: .02em; }
+    .ntab.active { background: #C8FF57; color: #0a0a0a; }
+    .ntab:hover:not(.active) { color: #f0ede8; background: rgba(255,255,255,0.06); }
+    .lang-switcher { display: flex; border: 1px solid rgba(255,255,255,0.1); border-radius: 100px; overflow: hidden; flex-shrink: 0; }
+    .ltab { font-size: 11px; font-weight: 600; padding: 6px 12px; cursor: pointer; color: rgba(240,237,232,0.4); transition: all .2s; border: none; background: transparent; font-family: 'DM Sans', sans-serif; letter-spacing: .04em; }
+    .ltab.active { background: rgba(200,255,87,0.15); color: #C8FF57; }
+    .ltab:hover:not(.active) { color: #f0ede8; background: rgba(255,255,255,0.05); }
+    .nav-right { display: flex; gap: .5rem; align-items: center; flex-shrink: 0; }
+    .fpill { font-size: 11px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; padding: 4px 11px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.12); color: rgba(240,237,232,0.4); cursor: pointer; transition: all .2s; background: none; font-family: 'DM Sans', sans-serif; }
+    .fpill:hover, .fpill.active { border-color: #C8FF57; color: #C8FF57; }
+    .back-btn { display: flex; align-items: center; gap: 7px; font-size: 12px; color: rgba(240,237,232,0.4); cursor: pointer; transition: color .2s; background: none; border: none; font-family: 'DM Sans', sans-serif; flex-shrink: 0; }
+    .back-btn:hover { color: #f0ede8; }
+    .back-btn svg { width: 13px; height: 13px; }
+    .abtn { display: flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(240,237,232,0.38); background: none; border: 1px solid rgba(255,255,255,0.1); border-radius: 100px; padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all .2s; }
+    .abtn:hover { color: #f0ede8; border-color: rgba(255,255,255,0.22); }
+    .abtn.hl { background: #C8FF57; color: #0a0a0a; border-color: #C8FF57; }
+    .abtn.hl:hover { background: #d4ff70; }
+
+    /* ── PROGRESS ── */
+    .prog-bar { height: 2px; background: rgba(255,255,255,0.07); position: sticky; top: 62px; z-index: 99; }
+    .prog-fill { height: 100%; background: #C8FF57; width: 0; transition: width .15s; }
+
+    /* ── SHARED ── */
+    .eyebrow { font-size: 10px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: #C8FF57; margin-bottom: .9rem; }
+    .pcat { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; }
+    .cd { width: 6px; height: 6px; border-radius: 50%; }
+    .ca .cd { background: #C8FF57; } .ca { color: #C8FF57; }
+    .ct .cd { background: #57C8FF; } .ct { color: #57C8FF; }
+    .ce .cd { background: #FF8A57; } .ce { color: #FF8A57; }
+    .cp .cd { background: #C857FF; } .cp { color: #C857FF; }
+    .arow { display: flex; align-items: center; gap: 10px; }
+    .av { width: 32px; height: 32px; border-radius: 50%; background: rgba(200,255,87,.1); border: 1px solid rgba(200,255,87,.2); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: #C8FF57; flex-shrink: 0; }
+    .aname { font-size: 13px; font-weight: 500; }
+    .adate { font-size: 11px; color: rgba(240,237,232,0.3); }
+    .rbtn { font-size: 12px; font-weight: 500; color: #0a0a0a; background: #C8FF57; border: none; padding: 8px 18px; border-radius: 100px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all .2s; font-family: 'DM Sans', sans-serif; }
+    .rbtn:hover { background: #d4ff70; transform: translateY(-1px); }
+    .ein { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 100px; padding: 7px 14px; font-size: 12px; color: #f0ede8; outline: none; width: 170px; font-family: 'DM Sans', sans-serif; }
+    .ein::placeholder { color: rgba(240,237,232,0.2); }
+    .sgo { background: #C8FF57; color: #0a0a0a; border: none; border-radius: 100px; padding: 7px 16px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background .2s; white-space: nowrap; }
+    .sgo:hover { background: #d4ff70; }
+    .subrow { display: flex; gap: 8px; }
+
+    /* ── BLOG ── */
+    .hero { padding: 3.5rem 2rem 2.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .hero-title { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 5vw, 3.75rem); font-weight: 800; line-height: 1.05; letter-spacing: -0.04em; max-width: 600px; margin-bottom: 1.1rem; }
+    .hero-title em { font-style: italic; color: rgba(240,237,232,0.28); }
+    .hero-sub { font-size: .9rem; font-weight: 300; color: rgba(240,237,232,0.48); max-width: 380px; line-height: 1.65; }
+    .feat { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .feat-img { background: #0d1408; min-height: 340px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; cursor: pointer; }
+    .feat-img::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 35% 50%, rgba(200,255,87,.09) 0%, transparent 68%); transition: background .3s; }
+    .feat-img:hover::before { background: radial-gradient(ellipse at 35% 50%, rgba(200,255,87,.16) 0%, transparent 68%); }
+    .feat-content { padding: 2.25rem 2rem; display: flex; flex-direction: column; justify-content: space-between; border-left: 1px solid rgba(255,255,255,0.08); }
+    .ptitle { font-family: 'Syne', sans-serif; font-size: 1.55rem; font-weight: 700; line-height: 1.15; letter-spacing: -0.03em; margin: .8rem 0 .6rem; }
+    .pexc { font-size: .85rem; font-weight: 300; color: rgba(240,237,232,0.48); line-height: 1.7; }
+    .pmeta { display: flex; align-items: center; justify-content: space-between; margin-top: 1.6rem; padding-top: 1.1rem; border-top: 1px solid rgba(255,255,255,0.08); }
+    .pgrid { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .pcard { padding: 1.75rem; border-right: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; gap: .6rem; cursor: pointer; transition: background .2s; }
+    .pcard:last-child { border-right: none; }
+    .pcard:hover { background: rgba(255,255,255,0.025); }
+    .cnum { font-family: 'Syne', sans-serif; font-size: 2.1rem; font-weight: 800; color: rgba(240,237,232,0.07); line-height: 1; letter-spacing: -0.05em; }
+    .ctitle { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.25; }
+    .cexc { font-size: .8rem; color: rgba(240,237,232,0.38); line-height: 1.65; font-weight: 300; flex: 1; }
+    .cfoot { display: flex; align-items: center; justify-content: space-between; padding-top: .8rem; border-top: 1px solid rgba(255,255,255,0.07); }
+    .rtime { font-size: 11px; color: rgba(240,237,232,0.28); }
+    .al { width: 27px; height: 27px; border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all .2s; }
+    .pcard:hover .al { border-color: #C8FF57; background: rgba(200,255,87,.07); }
+    .al svg { width: 10px; height: 10px; stroke: rgba(240,237,232,0.45); }
+    .pcard:hover .al svg { stroke: #C8FF57; }
+    .bfoot { padding: 1.25rem 2rem; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.07); }
+    .ftext { font-size: 12px; color: rgba(240,237,232,0.22); }
+
+    /* ── NOTÍCIAS ── */
+    .sec-hdr { padding: 2.25rem 2rem 1.25rem; display: flex; align-items: flex-end; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .stitle { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
+    .ssub { font-size: .78rem; color: rgba(240,237,232,0.35); font-weight: 300; margin-top: .3rem; }
+    .fbadge { display: flex; align-items: center; gap: 6px; font-size: 11px; color: rgba(240,237,232,0.35); border: 1px solid rgba(255,255,255,0.1); border-radius: 100px; padding: 6px 14px; flex-shrink: 0; }
+    .pulse { width: 6px; height: 6px; border-radius: 50%; background: #C8FF57; animation: blink 1.8s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+    .briefs { padding: 0 2rem; }
+    .bcard { display: grid; grid-template-columns: 68px 1fr; gap: 0 1.6rem; padding: 1.75rem 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .bday { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; letter-spacing: -0.05em; line-height: 1; color: rgba(240,237,232,0.09); }
+    .bmon { font-size: 10px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: rgba(240,237,232,0.2); margin-top: 2px; }
+    .btop { display: flex; align-items: center; gap: 9px; margin-bottom: .5rem; flex-wrap: wrap; }
+    .bpill { font-size: 9px; font-weight: 500; letter-spacing: .07em; text-transform: uppercase; padding: 3px 10px; border-radius: 100px; }
+    .bpa { background: rgba(200,255,87,.09); color: #C8FF57; }
+    .bpt { background: rgba(87,200,255,.09); color: #57C8FF; }
+    .bpe { background: rgba(255,138,87,.09); color: #FF8A57; }
+    .bsrc { font-size: 10px; color: rgba(240,237,232,0.2); font-weight: 300; }
+    .bhead { font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; letter-spacing: -0.025em; line-height: 1.25; margin-bottom: .6rem; }
+    .bsum { font-size: .8rem; color: rgba(240,237,232,0.42); font-weight: 300; line-height: 1.65; margin-bottom: .8rem; }
+    .opb { padding: .65rem 1rem; border-radius: 0 6px 6px 0; margin-bottom: .8rem; }
+    .oba { background: rgba(200,255,87,.04); border-left: 2px solid #C8FF57; }
+    .obt { background: rgba(87,200,255,.04); border-left: 2px solid #57C8FF; }
+    .oplbl { font-size: 9px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .25rem; }
+    .la { color: #C8FF57; } .lt { color: #57C8FF; }
+    .optxt { font-size: .85rem; font-style: italic; color: rgba(240,237,232,0.75); line-height: 1.6; font-weight: 300; }
+    .bfoot2 { display: flex; align-items: center; gap: 1rem; }
+    .rml { font-size: 11px; font-weight: 500; color: rgba(240,237,232,0.28); display: flex; align-items: center; gap: 5px; cursor: pointer; transition: color .2s; text-decoration: none; }
+    .rml:hover { color: #f0ede8; }
+    .rml svg { width: 10px; height: 10px; }
+    .shbtn { font-size: 11px; color: rgba(240,237,232,0.2); background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: color .2s; padding: 0; font-family: 'DM Sans', sans-serif; }
+    .shbtn:hover { color: rgba(240,237,232,0.5); }
+    .ncta { margin: 2rem; padding: 1.4rem 1.6rem; border: 1px solid rgba(200,255,87,.1); border-radius: 12px; background: rgba(200,255,87,.025); display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .ncta .nl { font-size: 10px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: #C8FF57; margin-bottom: .2rem; }
+    .ncta .nd { font-size: .78rem; color: rgba(240,237,232,0.38); font-weight: 300; }
+
+    /* ── SOBRE ── */
+    .sobre-wrap { padding: 4rem 2rem; max-width: 540px; }
+    .sobre-title { font-family: 'Syne', sans-serif; font-size: 2.4rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 1.4rem; }
+    .sobre-p { font-size: .92rem; font-weight: 300; color: rgba(240,237,232,0.52); line-height: 1.75; margin-bottom: 1rem; }
+    .sobre-btns { display: flex; gap: 10px; margin-top: 1.75rem; }
+    .sbtn-pri { font-size: 13px; font-weight: 500; color: #0a0a0a; background: #C8FF57; border: none; padding: 10px 22px; border-radius: 100px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background .2s; }
+    .sbtn-pri:hover { background: #d4ff70; }
+    .sbtn-sec { font-size: 13px; font-weight: 500; color: #f0ede8; background: transparent; border: 1px solid rgba(255,255,255,0.14); padding: 10px 22px; border-radius: 100px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all .2s; }
+    .sbtn-sec:hover { border-color: rgba(255,255,255,0.3); }
+
+    /* ── POST ── */
+    .ph { padding: 3rem 2rem 0; max-width: 760px; margin: 0 auto; }
+    .pbread { display: flex; align-items: center; gap: 7px; margin-bottom: 1.25rem; font-size: 11px; color: rgba(240,237,232,0.28); }
+    .pbread span { color: #C8FF57; }
+    .pcatb { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: #C8FF57; margin-bottom: .9rem; }
+    .cdg { width: 6px; height: 6px; border-radius: 50%; background: #C8FF57; }
+    .pmain-title { font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 4.2vw, 2.85rem); font-weight: 800; line-height: 1.08; letter-spacing: -0.04em; margin-bottom: 1.1rem; }
+    .pmain-title em { font-style: italic; color: rgba(240,237,232,0.28); }
+    .plead { font-family: 'Lora', serif; font-size: 1.05rem; font-weight: 400; color: rgba(240,237,232,0.6); line-height: 1.75; margin-bottom: 1.75rem; font-style: italic; }
+    .pbyline { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 0; border-top: 1px solid rgba(255,255,255,0.08); border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .pstats { display: flex; align-items: center; gap: 14px; }
+    .pstat { font-size: 11px; color: rgba(240,237,232,0.28); display: flex; align-items: center; gap: 5px; }
+    .pstat i { font-size: 13px; }
+    .pcover { max-width: 760px; margin: 0 auto; padding: 1.75rem 2rem 0; }
+    .covimg { width: 100%; height: 300px; background: #0d1408; border-radius: 12px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+    .covimg::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 40% 50%, rgba(200,255,87,.09) 0%, transparent 65%); }
+    .covcap { font-size: 11px; color: rgba(240,237,232,0.22); margin-top: .55rem; text-align: center; font-style: italic; }
+    .pbody-wrap { display: grid; grid-template-columns: 1fr 188px; gap: 2.5rem; max-width: 760px; margin: 0 auto; padding: 2.25rem 2rem 3.5rem; }
+    .pbody { font-family: 'Lora', serif; font-size: .97rem; line-height: 1.85; color: rgba(240,237,232,0.75); }
+    .pbody h2 { font-family: 'Syne', sans-serif; font-size: 1.28rem; font-weight: 700; letter-spacing: -0.03em; color: #f0ede8; margin: 2.25rem 0 .9rem; line-height: 1.2; }
+    .pbody p { margin-bottom: 1.35rem; }
+    .pbody strong { font-weight: 600; color: #f0ede8; }
+    .pquote { border-left: 2px solid #C8FF57; padding: .7rem 1.1rem; margin: 1.75rem 0; background: rgba(200,255,87,.03); border-radius: 0 8px 8px 0; }
+    .pquote p { font-family: 'Lora', serif; font-size: 1.05rem; font-style: italic; color: rgba(240,237,232,0.82); line-height: 1.7; margin: 0; }
+    .hbox { background: rgba(200,255,87,.04); border: 1px solid rgba(200,255,87,.1); border-radius: 10px; padding: 1.1rem 1.35rem; margin: 1.75rem 0; }
+    .hblbl { font-family: 'DM Sans', sans-serif; font-size: 9px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: #C8FF57; margin-bottom: .45rem; }
+    .hbox p { font-family: 'DM Sans', sans-serif; font-size: .83rem; color: rgba(240,237,232,0.58); margin: 0; line-height: 1.65; }
+    .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 2.25rem; padding-top: 1.35rem; border-top: 1px solid rgba(255,255,255,0.08); }
+    .tag { font-size: 11px; padding: 4px 12px; border: 1px solid rgba(255,255,255,0.09); border-radius: 100px; color: rgba(240,237,232,0.35); font-family: 'DM Sans', sans-serif; }
+    .pside { padding-top: .25rem; }
+    .slbl { font-family: 'DM Sans', sans-serif; font-size: 9px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: rgba(240,237,232,0.25); margin-bottom: .65rem; }
+    .sblk { margin-bottom: 1.75rem; }
+    .toci { display: flex; align-items: flex-start; gap: 7px; padding: 4px 0; cursor: pointer; }
+    .tocn { font-family: 'DM Sans', sans-serif; font-size: 10px; color: rgba(240,237,232,0.2); min-width: 16px; padding-top: 2px; transition: color .2s; }
+    .toct { font-family: 'DM Sans', sans-serif; font-size: 11px; color: rgba(240,237,232,0.37); line-height: 1.4; transition: color .2s; }
+    .toci:hover .toct, .toci.toc-a .toct { color: #C8FF57; }
+    .toci:hover .tocn, .toci.toc-a .tocn { color: #C8FF57; }
+    .sitm { display: flex; align-items: center; gap: 8px; font-family: 'DM Sans', sans-serif; font-size: 11px; color: rgba(240,237,232,0.36); background: none; border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; padding: 7px 10px; cursor: pointer; transition: all .2s; width: 100%; text-align: left; margin-bottom: 6px; }
+    .sitm:hover { color: #f0ede8; border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.03); }
+    .sitm i { font-size: 14px; }
+    .related { border-top: 1px solid rgba(255,255,255,0.08); padding: 2rem; max-width: 760px; margin: 0 auto; }
+    .rlbl { font-family: 'DM Sans', sans-serif; font-size: 9px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: rgba(240,237,232,0.25); margin-bottom: 1.1rem; }
+    .rgrid { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; }
+    .rcard { padding: 1.1rem; border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; cursor: pointer; transition: all .2s; }
+    .rcard:hover { border-color: rgba(255,255,255,0.14); background: rgba(255,255,255,0.02); }
+    .rccat { font-size: 9px; font-weight: 500; letter-spacing: .07em; text-transform: uppercase; font-family: 'DM Sans', sans-serif; margin-bottom: .45rem; display: block; }
+    .rct { color: #57C8FF; } .rce { color: #FF8A57; }
+    .rctitle { font-family: 'Syne', sans-serif; font-size: .9rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.25; margin-bottom: .4rem; }
+    .rctime { font-family: 'DM Sans', sans-serif; font-size: 11px; color: rgba(240,237,232,0.25); }
+    .pnl { background: rgba(200,255,87,.025); border-top: 1px solid rgba(200,255,87,.08); border-bottom: 1px solid rgba(200,255,87,.08); padding: 2.25rem 2rem; text-align: center; }
+    .pnley { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: #C8FF57; margin-bottom: .5rem; }
+    .pnlt { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: .4rem; }
+    .pnls { font-size: .82rem; color: rgba(240,237,232,0.38); font-weight: 300; margin-bottom: 1.35rem; }
+    .pnlf { display: flex; gap: 8px; justify-content: center; max-width: 360px; margin: 0 auto; }
+    .pnli { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 100px; padding: 9px 14px; font-size: 12px; color: #f0ede8; outline: none; font-family: 'DM Sans', sans-serif; }
+    .pnli::placeholder { color: rgba(240,237,232,0.2); }
+    .pnlb { background: #C8FF57; color: #0a0a0a; border: none; border-radius: 100px; padding: 9px 18px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; white-space: nowrap; transition: background .2s; }
+    .pnlb:hover { background: #d4ff70; }
+
+    /* ── ADSENSE ── */
+    .ad-block { margin: 2rem 0; padding: 1rem; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.08); border-radius: 10px; text-align: center; font-size: 11px; color: rgba(240,237,232,0.2); font-family: 'DM Sans', sans-serif; min-height: 90px; display: flex; align-items: center; justify-content: center; }
+
+    /* ── PRODUTOS ── */
+    .prod-rec { margin: 2.5rem 0; }
+    .prod-rec-label { font-family: 'DM Sans', sans-serif; font-size: 9px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: rgba(240,237,232,0.28); margin-bottom: .9rem; display: flex; align-items: center; gap: 8px; }
+    .prod-rec-label::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.07); }
+    .prod-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; }
+    .prod-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 1rem; text-decoration: none; color: inherit; transition: all .2s; display: flex; flex-direction: column; gap: .5rem; }
+    .prod-card:hover { background: rgba(255,255,255,0.06); border-color: rgba(200,255,87,0.2); transform: translateY(-2px); }
+    .prod-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: .25rem; }
+    .pi-green { background: rgba(200,255,87,0.1); } .pi-blue { background: rgba(87,200,255,0.1); } .pi-orange { background: rgba(255,138,87,0.1); }
+    .prod-name { font-family: 'DM Sans', sans-serif; font-size: .82rem; font-weight: 500; color: #f0ede8; line-height: 1.3; }
+    .prod-desc { font-family: 'DM Sans', sans-serif; font-size: .75rem; color: rgba(240,237,232,0.38); line-height: 1.5; flex: 1; }
+    .prod-cta { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; color: #C8FF57; display: flex; align-items: center; gap: 4px; margin-top: .25rem; }
+    .prod-cta svg { width: 9px; height: 9px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav { padding: 1rem; flex-wrap: wrap; gap: .6rem; }
+      .nav-center { order: 3; width: 100%; justify-content: space-between; }
+      .nav-right { display: none; }
+      .ntab { padding: 6px 12px; font-size: 11px; }
+      .ltab { padding: 5px 9px; font-size: 10px; }
+      .feat { grid-template-columns: 1fr; }
+      .feat-img { min-height: 220px; }
+      .feat-content { border-left: none; border-top: 1px solid rgba(255,255,255,0.08); }
+      .pgrid { grid-template-columns: 1fr; }
+      .pcard { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+      .pbody-wrap { grid-template-columns: 1fr; }
+      .pside { display: none; }
+      .rgrid { grid-template-columns: 1fr; }
+      .ncta { flex-direction: column; align-items: flex-start; }
+      .bfoot { flex-direction: column; gap: 1rem; align-items: flex-start; }
+      .pmeta { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .pbyline { flex-direction: column; align-items: flex-start; gap: .75rem; }
+      .prod-cards { grid-template-columns: 1fr; }
+      .sobre-title { font-size: 1.9rem; }
+      .sec-hdr { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    }
   </style>
-    </head>
-    <body>
-      <h1>Fusion Lab</h1>
-      <p>Bem-vindo ao Fusion Lab! Este blog foi publicado via GitHub Pages.</p>
+</head>
+<body data-current-lang="pt">
+
+<!-- NAV COMPONENT (macros inline por tela) -->
+
+<!-- ══ BLOG ══ -->
+<div class="screen active" id="s-blog">
+  <nav class="nav">
+    <a class="nav-logo" onclick="go('blog')" href="#">Fusion<span>Lab</span>
+      <small data-lang="pt">arquitetura · tech · vida</small>
+      <small data-lang="en">architecture · tech · life</small>
+      <small data-lang="es">arquitectura · tech · vida</small>
+    </a>
+    <div class="nav-center">
+      <div class="nav-tabs">
+        <button class="ntab active" onclick="go('blog')" data-lang="pt">Blog</button>
+        <button class="ntab active" onclick="go('blog')" data-lang="en">Blog</button>
+        <button class="ntab active" onclick="go('blog')" data-lang="es">Blog</button>
+        <button class="ntab" onclick="go('noticias')" data-lang="pt">Notícias</button>
+        <button class="ntab" onclick="go('noticias')" data-lang="en">News</button>
+        <button class="ntab" onclick="go('noticias')" data-lang="es">Noticias</button>
+        <button class="ntab" onclick="go('sobre')" data-lang="pt">Sobre</button>
+        <button class="ntab" onclick="go('sobre')" data-lang="en">About</button>
+        <button class="ntab" onclick="go('sobre')" data-lang="es">Sobre</button>
+      </div>
+      <div class="lang-switcher">
+        <button class="ltab active" onclick="setLang('pt')">PT</button>
+        <button class="ltab" onclick="setLang('en')">EN</button>
+        <button class="ltab" onclick="setLang('es')">ES</button>
+      </div>
+    </div>
+    <div class="nav-right">
+      <button class="fpill active" onclick="filterPill(this)" data-lang="pt">Todos</button>
+      <button class="fpill active" onclick="filterPill(this)" data-lang="en">All</button>
+      <button class="fpill active" onclick="filterPill(this)" data-lang="es">Todos</button>
+      <button class="fpill" onclick="filterPill(this)" data-lang="pt">Arquitetura</button>
+      <button class="fpill" onclick="filterPill(this)" data-lang="en">Architecture</button>
+      <button class="fpill" onclick="filterPill(this)" data-lang="es">Arquitectura</button>
+      <button class="fpill" onclick="filterPill(this)">Tech</button>
+      <button class="fpill" onclick="filterPill(this)" data-lang="pt">Negócios</button>
+      <button class="fpill" onclick="filterPill(this)" data-lang="en">Business</button>
+      <button class="fpill" onclick="filterPill(this)" data-lang="es">Negocios</button>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <p class="eyebrow" data-lang="pt">— Perspectivas que constroem</p>
+    <p class="eyebrow" data-lang="en">— Perspectives that build</p>
+    <p class="eyebrow" data-lang="es">— Perspectivas que construyen</p>
+    <h1 class="hero-title" data-lang="pt">Onde arquitetura<br><em>encontra</em> o futuro</h1>
+    <h1 class="hero-title" data-lang="en">Where architecture<br><em>meets</em> the future</h1>
+    <h1 class="hero-title" data-lang="es">Donde la arquitectura<br><em>encuentra</em> el futuro</h1>
+    <p class="hero-sub" data-lang="pt">Reflexões sobre espaço, tecnologia, empreendedorismo e a vida que se constrói no meio disso tudo.</p>
+    <p class="hero-sub" data-lang="en">Reflections on space, technology, entrepreneurship and the life you build along the way.</p>
+    <p class="hero-sub" data-lang="es">Reflexiones sobre espacio, tecnología, emprendimiento y la vida que se construye en el proceso.</p>
+  </div>
+
+  <div class="feat">
+    <div class="feat-img" onclick="go('post')">
+      <svg width="260" height="180" viewBox="0 0 260 180" fill="none" aria-hidden="true">
+        <rect x="15" y="100" width="230" height="70" stroke="rgba(200,255,87,0.3)" stroke-width="1"/>
+        <path d="M15 100 L130 18 L245 100" stroke="rgba(200,255,87,0.5)" stroke-width="1.5" fill="none"/>
+        <rect x="95" y="128" width="70" height="42" stroke="rgba(200,255,87,0.18)" stroke-width="1"/>
+        <line x1="40" y1="100" x2="40" y2="170" stroke="rgba(200,255,87,0.1)" stroke-width="1"/>
+        <line x1="220" y1="100" x2="220" y2="170" stroke="rgba(200,255,87,0.1)" stroke-width="1"/>
+        <circle cx="130" cy="18" r="3.5" fill="rgba(200,255,87,0.5)"/>
+        <line x1="130" y1="21" x2="130" y2="55" stroke="rgba(200,255,87,0.15)" stroke-width="1" stroke-dasharray="4 3"/>
+        <ellipse cx="200" cy="38" rx="15" ry="15" stroke="rgba(200,255,87,0.2)" stroke-width="1"/>
+        <line x1="190" y1="38" x2="210" y2="38" stroke="rgba(200,255,87,0.2)" stroke-width="1"/>
+        <line x1="200" y1="28" x2="200" y2="48" stroke="rgba(200,255,87,0.2)" stroke-width="1"/>
+      </svg>
+    </div>
+    <div class="feat-content">
+      <div>
+        <span class="pcat ca"><span class="cd"></span>
+          <span data-lang="pt">Arquitetura</span><span data-lang="en">Architecture</span><span data-lang="es">Arquitectura</span>
+        </span>
+        <h2 class="ptitle" data-lang="pt">A casa que respira: design bioclimático no Brasil contemporâneo</h2>
+        <h2 class="ptitle" data-lang="en">The breathing house: bioclimatic design in contemporary Brazil</h2>
+        <h2 class="ptitle" data-lang="es">La casa que respira: diseño bioclimático en el Brasil contemporáneo</h2>
+        <p class="pexc" data-lang="pt">Repensar a habitação tropical não é romantismo — é necessidade urgente. Como ventilação cruzada, materiais locais e geometria solar estão redefinindo o conforto no século XXI.</p>
+        <p class="pexc" data-lang="en">Rethinking tropical housing is not romantic — it's an urgent need. How cross-ventilation, local materials and solar geometry are redefining comfort in the 21st century.</p>
+        <p class="pexc" data-lang="es">Repensar la vivienda tropical no es romanticismo — es una necesidad urgente. Cómo la ventilación cruzada, materiales locales y geometría solar redefinen el confort en el siglo XXI.</p>
+      </div>
+      <div class="pmeta">
+        <div class="arow">
+          <div class="av">FL</div>
+          <div>
+            <div class="aname">Fusion Lab</div>
+            <div class="adate" data-lang="pt">8 Mai 2026 · 7 min</div>
+            <div class="adate" data-lang="en">May 8, 2026 · 7 min</div>
+            <div class="adate" data-lang="es">8 May 2026 · 7 min</div>
+          </div>
+        </div>
+        <button class="rbtn" onclick="go('post')">
+          <span data-lang="pt">Ler post</span><span data-lang="en">Read post</span><span data-lang="es">Leer post</span>
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1 9L9 1M9 1H3M9 1V7" stroke="currentColor" stroke-width="1.5"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pgrid">
+    <div class="pcard" onclick="go('post')">
+      <div class="cnum">01</div>
+      <span class="pcat ct"><span class="cd"></span> Tech</span>
+      <h3 class="ctitle" data-lang="pt">IA generativa como ferramenta de projeto: aliada ou ameaça?</h3>
+      <h3 class="ctitle" data-lang="en">Generative AI as a design tool: ally or threat?</h3>
+      <h3 class="ctitle" data-lang="es">IA generativa como herramienta de diseño: ¿aliada o amenaza?</h3>
+      <p class="cexc" data-lang="pt">O que muda no processo criativo quando a máquina propõe a forma?</p>
+      <p class="cexc" data-lang="en">What changes in the creative process when the machine proposes the form?</p>
+      <p class="cexc" data-lang="es">¿Qué cambia en el proceso creativo cuando la máquina propone la forma?</p>
+      <div class="cfoot">
+        <span class="rtime" data-lang="pt">5 min de leitura</span><span class="rtime" data-lang="en">5 min read</span><span class="rtime" data-lang="es">5 min de lectura</span>
+        <div class="al"><svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1 11L11 1M11 1H4M11 1V8" stroke="currentColor" stroke-width="1.5"/></svg></div>
+      </div>
+    </div>
+    <div class="pcard" onclick="go('post')">
+      <div class="cnum">02</div>
+      <span class="pcat ce"><span class="cd"></span>
+        <span data-lang="pt">Empreendedorismo</span><span data-lang="en">Business</span><span data-lang="es">Negocios</span>
+      </span>
+      <h3 class="ctitle" data-lang="pt">Do escritório à startup: o que aprendi vendendo meu primeiro projeto</h3>
+      <h3 class="ctitle" data-lang="en">From studio to startup: what I learned selling my first project</h3>
+      <h3 class="ctitle" data-lang="es">Del estudio a la startup: lo que aprendí vendiendo mi primer proyecto</h3>
+      <p class="cexc" data-lang="pt">Ninguém ensina no curso como precificar ou lidar com "só um ajustezinho".</p>
+      <p class="cexc" data-lang="en">No one teaches you in school how to price or handle "just a small tweak".</p>
+      <p class="cexc" data-lang="es">Nadie te enseña en la carrera cómo fijar precios o manejar "solo un pequeño ajuste".</p>
+      <div class="cfoot">
+        <span class="rtime" data-lang="pt">9 min de leitura</span><span class="rtime" data-lang="en">9 min read</span><span class="rtime" data-lang="es">9 min de lectura</span>
+        <div class="al"><svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1 11L11 1M11 1H4M11 1V8" stroke="currentColor" stroke-width="1.5"/></svg></div>
+      </div>
+    </div>
+    <div class="pcard" onclick="go('post')">
+      <div class="cnum">03</div>
+      <span class="pcat cp"><span class="cd"></span>
+        <span data-lang="pt">Pessoal</span><span data-lang="en">Personal</span><span data-lang="es">Personal</span>
+      </span>
+      <h3 class="ctitle" data-lang="pt">Três anos morando no que eu mesmo projetei</h3>
+      <h3 class="ctitle" data-lang="en">Three years living in what I designed myself</h3>
+      <h3 class="ctitle" data-lang="es">Tres años viviendo en lo que yo mismo diseñé</h3>
+      <p class="cexc" data-lang="pt">Tudo que eu imaginei mudou depois que me mudei.</p>
+      <p class="cexc" data-lang="en">Everything I imagined changed after I moved in.</p>
+      <p class="cexc" data-lang="es">Todo lo que imaginé cambió después de mudarme.</p>
+      <div class="cfoot">
+        <span class="rtime" data-lang="pt">6 min de leitura</span><span class="rtime" data-lang="en">6 min read</span><span class="rtime" data-lang="es">6 min de lectura</span>
+        <div class="al"><svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1 11L11 1M11 1H4M11 1V8" stroke="currentColor" stroke-width="1.5"/></svg></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bfoot">
+    <span class="ftext">Fusion Lab © 2026</span>
+    <div class="subrow">
+      <input class="ein" type="email" placeholder="email@exemplo.com" />
+      <button class="sgo" data-lang="pt">Assinar newsletter</button>
+      <button class="sgo" data-lang="en">Subscribe</button>
+      <button class="sgo" data-lang="es">Suscribirse</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ NOTÍCIAS ══ -->
+<div class="screen" id="s-noticias">
+  <nav class="nav">
+    <a class="nav-logo" onclick="go('blog')" href="#">Fusion<span>Lab</span>
+      <small data-lang="pt">arquitetura · tech · vida</small><small data-lang="en">architecture · tech · life</small><small data-lang="es">arquitectura · tech · vida</small>
+    </a>
+    <div class="nav-center">
+      <div class="nav-tabs">
+        <button class="ntab" onclick="go('blog')" data-lang="pt">Blog</button><button class="ntab" onclick="go('blog')" data-lang="en">Blog</button><button class="ntab" onclick="go('blog')" data-lang="es">Blog</button>
+        <button class="ntab active" onclick="go('noticias')" data-lang="pt">Notícias</button><button class="ntab active" onclick="go('noticias')" data-lang="en">News</button><button class="ntab active" onclick="go('noticias')" data-lang="es">Noticias</button>
+        <button class="ntab" onclick="go('sobre')" data-lang="pt">Sobre</button><button class="ntab" onclick="go('sobre')" data-lang="en">About</button><button class="ntab" onclick="go('sobre')" data-lang="es">Sobre</button>
+      </div>
+      <div class="lang-switcher">
+        <button class="ltab active" onclick="setLang('pt')">PT</button>
+        <button class="ltab" onclick="setLang('en')">EN</button>
+        <button class="ltab" onclick="setLang('es')">ES</button>
+      </div>
+    </div>
+    <div class="nav-right"></div>
+  </nav>
+  <div class="sec-hdr">
+    <div>
+      <p class="eyebrow" data-lang="pt">— Feed editorial</p><p class="eyebrow" data-lang="en">— Editorial feed</p><p class="eyebrow" data-lang="es">— Feed editorial</p>
+      <h2 class="stitle" data-lang="pt">Briefs & Opiniões</h2><h2 class="stitle" data-lang="en">Briefs & Opinions</h2><h2 class="stitle" data-lang="es">Briefs & Opiniones</h2>
+      <p class="ssub" data-lang="pt">3× por semana — notícia + minha visão, sem enrolação</p>
+      <p class="ssub" data-lang="en">3× a week — news + my take, straight to the point</p>
+      <p class="ssub" data-lang="es">3× por semana — noticia + mi opinión, sin rodeos</p>
+    </div>
+    <div class="fbadge"><div class="pulse"></div>
+      <span data-lang="pt">Atualizado hoje</span><span data-lang="en">Updated today</span><span data-lang="es">Actualizado hoy</span>
+    </div>
+  </div>
+  <div class="briefs">
+    <div class="bcard">
+      <div><div class="bday">08</div><div class="bmon" data-lang="pt">Mai</div><div class="bmon" data-lang="en">May</div><div class="bmon" data-lang="es">May</div></div>
+      <div>
+        <div class="btop"><span class="bpill bpt">Tech</span><span class="bsrc">via MIT Technology Review</span></div>
+        <h3 class="bhead" data-lang="pt">Software de BIM começa a incorporar geração procedural com IA para fachadas complexas</h3>
+        <h3 class="bhead" data-lang="en">BIM software starts incorporating AI procedural generation for complex facades</h3>
+        <h3 class="bhead" data-lang="es">El software BIM empieza a incorporar generación procedural con IA para fachadas complejas</h3>
+        <p class="bsum" data-lang="pt">Novos plugins para Revit e Archicad usam modelos generativos para propor variações de fachada em tempo real, respeitando restrições estruturais e normativas locais.</p>
+        <p class="bsum" data-lang="en">New plugins for Revit and Archicad use generative models to propose facade variations in real time, respecting structural constraints and local regulations.</p>
+        <p class="bsum" data-lang="es">Nuevos plugins para Revit y Archicad usan modelos generativos para proponer variaciones de fachada en tiempo real, respetando restricciones estructurales y normativas locales.</p>
+        <div class="opb obt">
+          <div class="oplbl lt" data-lang="pt">Minha opinião</div><div class="oplbl lt" data-lang="en">My take</div><div class="oplbl lt" data-lang="es">Mi opinión</div>
+          <p class="optxt" data-lang="pt">"Ferramenta boa, mas cuidado: o software não sabe o que o cliente quer — só o arquiteto sabe. O risco é terceirizar a escuta para um algoritmo."</p>
+          <p class="optxt" data-lang="en">"Good tool, but be careful: the software doesn't know what the client wants — only the architect does. The risk is outsourcing listening to an algorithm."</p>
+          <p class="optxt" data-lang="es">"Buena herramienta, pero cuidado: el software no sabe lo que quiere el cliente — solo el arquitecto lo sabe. El riesgo es tercerizar la escucha a un algoritmo."</p>
+        </div>
+        <div class="bfoot2">
+          <a class="rml" href="#" target="_blank">
+            <span data-lang="pt">Ler notícia completa</span><span data-lang="en">Read full article</span><span data-lang="es">Leer artículo completo</span>
+            <svg viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1 9L9 1M9 1H3M9 1V7" stroke="currentColor" stroke-width="1.5"/></svg>
+          </a>
+          <button class="shbtn"><i class="ti ti-share" aria-hidden="true"></i>
+            <span data-lang="pt">Compartilhar</span><span data-lang="en">Share</span><span data-lang="es">Compartir</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="bcard">
+      <div><div class="bday">06</div><div class="bmon" data-lang="pt">Mai</div><div class="bmon" data-lang="en">May</div><div class="bmon" data-lang="es">May</div></div>
+      <div>
+        <div class="btop">
+          <span class="bpill bpa" data-lang="pt">Arquitetura</span><span class="bpill bpa" data-lang="en">Architecture</span><span class="bpill bpa" data-lang="es">Arquitectura</span>
+          <span class="bsrc">via ArchDaily Brasil</span>
+        </div>
+        <h3 class="bhead" data-lang="pt">Salvador aprova novo zoneamento que permite mais habitação de interesse social no Centro Histórico</h3>
+        <h3 class="bhead" data-lang="en">Salvador approves new zoning allowing more social housing in the Historic Center</h3>
+        <h3 class="bhead" data-lang="es">Salvador aprueba nueva zonificación que permite más vivienda social en el Centro Histórico</h3>
+        <p class="bsum" data-lang="pt">A Prefeitura de Salvador aprovou revisão no Plano Diretor que flexibiliza gabaritos e permite usos mistos em setores antes exclusivamente comerciais do Pelourinho.</p>
+        <p class="bsum" data-lang="en">The city of Salvador approved a revision of the Master Plan that relaxes height limits and allows mixed uses in sectors previously exclusive to commercial activity in Pelourinho.</p>
+        <p class="bsum" data-lang="es">La Prefectura de Salvador aprobó una revisión del Plan Director que flexibiliza alturas y permite usos mixtos en sectores antes exclusivamente comerciales del Pelourinho.</p>
+        <div class="opb oba">
+          <div class="oplbl la" data-lang="pt">Minha opinião</div><div class="oplbl la" data-lang="en">My take</div><div class="oplbl la" data-lang="es">Mi opinión</div>
+          <p class="optxt" data-lang="pt">"Passo importante, mas incompleto sem revisão das normas de tombamento. O patrimônio histórico não pode virar argumento para manter área nobre vazia e inacessível."</p>
+          <p class="optxt" data-lang="en">"An important step, but incomplete without revising heritage preservation rules. Historic patrimony cannot become an argument for keeping noble areas empty and inaccessible."</p>
+          <p class="optxt" data-lang="es">"Un paso importante, pero incompleto sin revisar las normas de patrimonio. El legado histórico no puede convertirse en argumento para mantener zonas nobles vacías e inaccesibles."</p>
+        </div>
+        <div class="bfoot2">
+          <a class="rml" href="#" target="_blank">
+            <span data-lang="pt">Ler notícia completa</span><span data-lang="en">Read full article</span><span data-lang="es">Leer artículo completo</span>
+            <svg viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1 9L9 1M9 1H3M9 1V7" stroke="currentColor" stroke-width="1.5"/></svg>
+          </a>
+          <button class="shbtn"><i class="ti ti-share" aria-hidden="true"></i>
+            <span data-lang="pt">Compartilhar</span><span data-lang="en">Share</span><span data-lang="es">Compartir</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ncta">
+    <div>
+      <div class="nl" data-lang="pt">Não perca nenhum brief</div><div class="nl" data-lang="en">Don't miss a brief</div><div class="nl" data-lang="es">No te pierdas ningún brief</div>
+      <div class="nd" data-lang="pt">3× por semana direto no seu e-mail</div><div class="nd" data-lang="en">3× a week straight to your inbox</div><div class="nd" data-lang="es">3× por semana directo a tu correo</div>
+    </div>
+    <div class="subrow">
+      <input class="ein" type="email" placeholder="email@exemplo.com" />
+      <button class="sgo" data-lang="pt">Assinar grátis</button><button class="sgo" data-lang="en">Subscribe free</button><button class="sgo" data-lang="es">Suscribirse gratis</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SOBRE ══ -->
+<div class="screen" id="s-sobre">
+  <nav class="nav">
+    <a class="nav-logo" onclick="go('blog')" href="#">Fusion<span>Lab</span>
+      <small data-lang="pt">arquitetura · tech · vida</small><small data-lang="en">architecture · tech · life</small><small data-lang="es">arquitectura · tech · vida</small>
+    </a>
+    <div class="nav-center">
+      <div class="nav-tabs">
+        <button class="ntab" onclick="go('blog')" data-lang="pt">Blog</button><button class="ntab" onclick="go('blog')" data-lang="en">Blog</button><button class="ntab" onclick="go('blog')" data-lang="es">Blog</button>
+        <button class="ntab" onclick="go('noticias')" data-lang="pt">Notícias</button><button class="ntab" onclick="go('noticias')" data-lang="en">News</button><button class="ntab" onclick="go('noticias')" data-lang="es">Noticias</button>
+        <button class="ntab active" onclick="go('sobre')" data-lang="pt">Sobre</button><button class="ntab active" onclick="go('sobre')" data-lang="en">About</button><button class="ntab active" onclick="go('sobre')" data-lang="es">Sobre</button>
+      </div>
+      <div class="lang-switcher">
+        <button class="ltab active" onclick="setLang('pt')">PT</button>
+        <button class="ltab" onclick="setLang('en')">EN</button>
+        <button class="ltab" onclick="setLang('es')">ES</button>
+      </div>
+    </div>
+    <div class="nav-right"></div>
+  </nav>
+  <div class="sobre-wrap">
+    <p class="eyebrow" data-lang="pt">— Quem escreve aqui</p><p class="eyebrow" data-lang="en">— Who writes here</p><p class="eyebrow" data-lang="es">— Quién escribe aquí</p>
+    <h2 class="sobre-title" data-lang="pt">Fusion Lab é um espaço de <em style="font-style:italic;color:rgba(240,237,232,0.28);">fusão</em></h2>
+    <h2 class="sobre-title" data-lang="en">Fusion Lab is a space of <em style="font-style:italic;color:rgba(240,237,232,0.28);">fusion</em></h2>
+    <h2 class="sobre-title" data-lang="es">Fusion Lab es un espacio de <em style="font-style:italic;color:rgba(240,237,232,0.28);">fusión</em></h2>
+    <p class="sobre-p" data-lang="pt">Arquitetura, tecnologia, empreendedorismo e vida pessoal não são gavetas separadas — são facetas do mesmo processo de construir algo que valha a pena.</p>
+    <p class="sobre-p" data-lang="en">Architecture, technology, entrepreneurship and personal life are not separate drawers — they are facets of the same process of building something worthwhile.</p>
+    <p class="sobre-p" data-lang="es">Arquitectura, tecnología, emprendimiento y vida personal no son cajones separados — son facetas del mismo proceso de construir algo que valga la pena.</p>
+    <p class="sobre-p" data-lang="pt">Posts longos toda semana, briefs 3× por semana — sempre com opinião, nunca neutro. Baseado em Salvador, Bahia.</p>
+    <p class="sobre-p" data-lang="en">Long posts every week, briefs 3× a week — always with an opinion, never neutral. Based in Salvador, Bahia, Brazil.</p>
+    <p class="sobre-p" data-lang="es">Posts largos cada semana, briefs 3× por semana — siempre con opinión, nunca neutral. Con base en Salvador, Bahía, Brasil.</p>
+    <div class="sobre-btns">
+      <button class="sbtn-pri" onclick="go('blog')" data-lang="pt">Ver posts</button><button class="sbtn-pri" onclick="go('blog')" data-lang="en">See posts</button><button class="sbtn-pri" onclick="go('blog')" data-lang="es">Ver posts</button>
+      <button class="sbtn-sec" onclick="go('noticias')" data-lang="pt">Ver notícias</button><button class="sbtn-sec" onclick="go('noticias')" data-lang="en">See news</button><button class="sbtn-sec" onclick="go('noticias')" data-lang="es">Ver noticias</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ POST ══ -->
+<div class="screen" id="s-post">
+  <nav class="nav">
+    <button class="back-btn" onclick="go('blog')">
+      <svg viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M8 2L3 6.5L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span data-lang="pt">Voltar ao blog</span><span data-lang="en">Back to blog</span><span data-lang="es">Volver al blog</span>
+    </button>
+    <a class="nav-logo" onclick="go('blog')" href="#">Fusion<span>Lab</span>
+      <small data-lang="pt">arquitetura · tech · vida</small><small data-lang="en">architecture · tech · life</small><small data-lang="es">arquitectura · tech · vida</small>
+    </a>
+    <div class="nav-right" style="gap:.5rem;">
+      <div class="lang-switcher">
+        <button class="ltab active" onclick="setLang('pt')">PT</button>
+        <button class="ltab" onclick="setLang('en')">EN</button>
+        <button class="ltab" onclick="setLang('es')">ES</button>
+      </div>
+      <button class="abtn"><i class="ti ti-share" aria-hidden="true"></i>
+        <span data-lang="pt">Compartilhar</span><span data-lang="en">Share</span><span data-lang="es">Compartir</span>
+      </button>
+      <button class="abtn hl"><i class="ti ti-bell" aria-hidden="true"></i>
+        <span data-lang="pt">Assinar</span><span data-lang="en">Subscribe</span><span data-lang="es">Suscribir</span>
+      </button>
+    </div>
+  </nav>
+  <div class="prog-bar"><div class="prog-fill" id="prog"></div></div>
+
+  <div class="ph">
+    <div class="pbread">
+      Blog <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true"><path d="M2 1l3 3-3 3" stroke="currentColor" stroke-width="1.2"/></svg>
+      <span data-lang="pt">Arquitetura</span><span data-lang="en">Architecture</span><span data-lang="es">Arquitectura</span>
+    </div>
+    <div class="pcatb"><span class="cdg"></span>
+      <span data-lang="pt">Arquitetura</span><span data-lang="en">Architecture</span><span data-lang="es">Arquitectura</span>
+    </div>
+    <h1 class="pmain-title" data-lang="pt">A casa que respira:<br><em>design bioclimático</em><br>no Brasil contemporâneo</h1>
+    <h1 class="pmain-title" data-lang="en">The breathing house:<br><em>bioclimatic design</em><br>in contemporary Brazil</h1>
+    <h1 class="pmain-title" data-lang="es">La casa que respira:<br><em>diseño bioclimático</em><br>en el Brasil contemporáneo</h1>
+    <p class="plead" data-lang="pt">Repensar a habitação tropical não é romantismo — é necessidade urgente. Como ventilação cruzada, materiais locais e geometria solar estão redefinindo o que significa conforto no século XXI.</p>
+    <p class="plead" data-lang="en">Rethinking tropical housing is not romantic — it's an urgent need. How cross-ventilation, local materials and solar geometry are redefining what comfort means in the 21st century.</p>
+    <p class="plead" data-lang="es">Repensar la vivienda tropical no es romanticismo — es una necesidad urgente. Cómo la ventilación cruzada, materiales locales y geometría solar redefinen el confort en el siglo XXI.</p>
+    <div class="pbyline">
+      <div class="arow">
+        <div class="av">FL</div>
+        <div>
+          <div class="aname">Fusion Lab</div>
+          <div class="adate" data-lang="pt">8 de maio de 2026 · Salvador, BA</div>
+          <div class="adate" data-lang="en">May 8, 2026 · Salvador, BA</div>
+          <div class="adate" data-lang="es">8 de mayo de 2026 · Salvador, BA</div>
+        </div>
+      </div>
+      <div class="pstats">
+        <span class="pstat"><i class="ti ti-clock" aria-hidden="true"></i> 7 min</span>
+        <span class="pstat"><i class="ti ti-eye" aria-hidden="true"></i> 1.2k</span>
+        <span class="pstat"><i class="ti ti-heart" aria-hidden="true"></i> 84</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="pcover">
+    <div class="covimg">
+      <svg width="300" height="190" viewBox="0 0 300 190" fill="none" aria-hidden="true">
+        <rect x="15" y="105" width="270" height="75" stroke="rgba(200,255,87,0.25)" stroke-width="1"/>
+        <path d="M15 105 L150 18 L285 105" stroke="rgba(200,255,87,0.48)" stroke-width="1.5" fill="none"/>
+        <rect x="110" y="135" width="80" height="45" stroke="rgba(200,255,87,0.16)" stroke-width="1"/>
+        <line x1="45" y1="105" x2="45" y2="180" stroke="rgba(200,255,87,0.09)" stroke-width="1"/>
+        <line x1="255" y1="105" x2="255" y2="180" stroke="rgba(200,255,87,0.09)" stroke-width="1"/>
+        <circle cx="150" cy="18" r="3.5" fill="rgba(200,255,87,0.48)"/>
+      </svg>
+    </div>
+    <p class="covcap" data-lang="pt">Diagrama esquemático de ventilação cruzada — estudo de implantação solar</p>
+    <p class="covcap" data-lang="en">Schematic cross-ventilation diagram — solar siting study</p>
+    <p class="covcap" data-lang="es">Diagrama esquemático de ventilación cruzada — estudio de implantación solar</p>
+  </div>
+
+  <div class="pbody-wrap">
+    <article class="pbody">
+      <!-- PT -->
+      <div data-lang="pt">
+        <h2 id="s1">O problema que fingimos não ver</h2>
+        <p>Durante décadas, a arquitetura brasileira importou soluções climáticas da Europa sem questionar sua adequação ao trópico. O resultado: edifícios envidraçados em cidades onde o sol bate perpendicular o ano todo.</p>
+        <p>Não é ignorância — é inércia. <strong>O ar-condicionado resolve o conforto imediato e libera o arquiteto de pensar na forma.</strong></p>
+        <div class="pquote"><p>"A arquitetura bioclimática não é estilo — é a recusa em terceirizar para a máquina aquilo que a geometria, a orientação e o material já poderiam resolver."</p></div>
+        <h2 id="s2">O que ventilação cruzada realmente significa</h2>
+        <p>Precisamos de duas aberturas em paredes opostas — uma captando o vento dominante, outra liberando o ar aquecido. Em Salvador, os ventos dominantes vêm do sudeste.</p>
+        <div class="hbox"><div class="hblbl">Dado relevante</div><p>Segundo o INMET, Salvador tem ventos dominantes de SE com velocidade média de 3,8 m/s. Uma abertura bem posicionada pode reduzir a temperatura interna em até 4°C sem nenhum equipamento mecânico.</p></div>
+        <div class="ad-block"><!-- <ins class="adsbygoogle" data-ad-client="ca-pub-XXXXXXXXXX" data-ad-slot="XXXXXXXXXX" data-ad-format="auto"></ins> --><span>Espaço publicitário — Google AdSense</span></div>
+        <h2 id="s3">Materiais locais como estratégia, não folclore</h2>
+        <p>O uso de materiais regionais é principalmente uma decisão técnica. <strong>A pedra calcária, o bambu tratado e a cerâmica artesanal têm inércia térmica completamente diferente do concreto convencional.</strong></p>
+        <h2 id="s4">Geometria solar: a ferramenta mais subutilizada</h2>
+        <p>Softwares como o Ladybug Tools integrado ao Grasshopper permitem testar múltiplos cenários antes de fechar qualquer planta. O arquiteto que ainda projeta sem simulação climática está, literalmente, chutando.</p>
+        <div class="tags"><span class="tag">Arquitetura bioclimática</span><span class="tag">Design sustentável</span><span class="tag">Salvador</span><span class="tag">Ventilação natural</span></div>
+        <div class="prod-rec">
+          <div class="prod-rec-label">Ferramentas que uso e recomendo</div>
+          <div class="prod-cards">
+            <a class="prod-card" href="SEU_LINK_AFILIADO" target="_blank" rel="noopener sponsored"><div class="prod-icon pi-green"><i class="ti ti-3d-cube-sphere" style="font-size:20px;color:#C8FF57;" aria-hidden="true"></i></div><div class="prod-name">Ladybug Tools</div><div class="prod-desc">Plugin gratuito para simulação climática no Rhino.</div><div class="prod-cta">Ver ferramenta <svg viewBox="0 0 9 9" fill="none" aria-hidden="true"><path d="M1 8L8 1M8 1H3M8 1V6" stroke="currentColor" stroke-width="1.3"/></svg></div></a>
+            <a class="prod-card" href="SEU_LINK_AFILIADO" target="_blank" rel="noopener sponsored"><div class="prod-icon pi-blue"><i class="ti ti-book" style="font-size:20px;color:#57C8FF;" aria-hidden="true"></i></div><div class="prod-name">Arquitetura Bioclimática — Frota</div><div class="prod-desc">A referência nacional sobre conforto térmico.</div><div class="prod-cta">Ver na Amazon <svg viewBox="0 0 9 9" fill="none" aria-hidden="true"><path d="M1 8L8 1M8 1H3M8 1V6" stroke="currentColor" stroke-width="1.3"/></svg></div></a>
+            <a class="prod-card" href="SEU_LINK_AFILIADO" target="_blank" rel="noopener sponsored"><div class="prod-icon pi-orange"><i class="ti ti-sun" style="font-size:20px;color:#FF8A57;" aria-hidden="true"></i></div><div class="prod-name">Curso Conforto Ambiental</div><div class="prod-desc">Treinamento online com projetos práticos.</div><div class="prod-cta">Ver curso <svg viewBox="0 0 9 9" fill="none" aria-hidden="true"><path d="M1 8L8 1M8 1H3M8 1V6" stroke="currentColor" stroke-width="1.3"/></svg></div></a>
+          </div>
+        </div>
+      </div>
+      <!-- EN -->
+      <div data-lang="en">
+        <h2 id="s1en">The problem we pretend not to see</h2>
+        <p>For decades, Brazilian architecture imported climate solutions from Europe without questioning their suitability for the tropics. The result: glass buildings in cities where the sun hits perpendicularly year-round.</p>
+        <p>It's not ignorance — it's inertia. <strong>Air conditioning solves immediate comfort and frees the architect from thinking about form.</strong></p>
+        <div class="pquote"><p>"Bioclimatic architecture is not a style — it's the refusal to outsource to machines what geometry, orientation and materials could already solve."</p></div>
+        <h2 id="s2en">What cross-ventilation really means</h2>
+        <p>We need two openings on opposite walls — one capturing the dominant wind, one releasing heated air. In Salvador, dominant winds come from the southeast.</p>
+        <div class="hbox"><div class="hblbl">Key data</div><p>According to INMET, Salvador has dominant SE winds averaging 3.8 m/s. A well-placed opening can reduce indoor temperature by up to 4°C with no mechanical equipment.</p></div>
+        <div class="ad-block"><span>Ad space — Google AdSense</span></div>
+        <h2 id="s3en">Local materials as strategy, not folklore</h2>
+        <p>The use of regional materials is primarily a technical decision. <strong>Limestone, treated bamboo and artisanal ceramics have completely different thermal inertia from conventional concrete.</strong></p>
+        <h2 id="s4en">Solar geometry: the most underused tool</h2>
+        <p>Tools like Ladybug integrated into Grasshopper allow testing multiple scenarios before locking any floor plan. An architect who still designs without climate simulation is, literally, guessing.</p>
+        <div class="tags"><span class="tag">Bioclimatic architecture</span><span class="tag">Sustainable design</span><span class="tag">Salvador</span><span class="tag">Natural ventilation</span></div>
+        <div class="prod-rec">
+          <div class="prod-rec-label">Tools I use and recommend</div>
+          <div class="prod-cards">
+            <a class="prod-card" href="SEU_LINK_AFILIADO" target="_blank" rel="noopener sponsored"><div class="prod-icon pi-green"><i class="ti ti-3d-cube-sphere" style="font-size:20px;color:#C8FF57;" aria-hidden="true"></i></div><div class="prod-name">Ladybug Tools</div><div class="prod-desc">Free plugin for climate and solar simulation in Rhino.</div><div class="prod-cta">See tool <svg viewBox="0 0 9 9" fill="none" aria-hidden="true"><path d="M1 8L8 1M8 1H3M8 1V6" stroke="currentColor" stroke-width="1.3"/></svg></div></a>
+            <a class="prod-card" href="SEU_LINK_AFILIADO" target="_blank" rel="noopener sponsored"><div class="prod-icon pi-blue"><i class="ti ti-book" style="font-size:20px;color:#57C8FF;" aria-hidden="true"></i></div><div class="prod-name">Sun, Wind & Light — Brown</div><div class="prod-desc">The key reference on architectural climate strategies.</div><div class="prod-cta">See on Amazon <svg viewBox="0 0 9 9" fill="none" aria-hidden="true"><path d="M1 8L8 1M8 1H3M8 1V6" stroke="currentColor" stroke-width="1.3"/></svg></div></a>
+            <a class="prod-card" href="SEU_LINK_AFILIADO" target="_blank" rel="noopener sponsored"><div class="prod-icon pi-orange"><i class="ti ti-sun" style="font-size:20px;color:#FF8A57;" aria-hidden="true"></i></div><div class="prod-name">Passive House Course</div><div class="prod-desc">Online training on natural ventilation and lighting.</div><div class="prod-cta">See course <svg viewBox="0 0 9 9" fill="none" aria-hidden="true"><path d="M1 8L8 1M8 1H3M8 1V6" stroke="currentColor" stroke-width="1.3"/></svg></div></a>
+          </div>
+        </div>
+      </div>
+      <!-- ES -->
+      <div data-lang="es">
+        <h2 id="s1es">El problema que fingimos no ver</h2>
+        <p>Durante décadas, la arquitectura brasileña importó soluciones climáticas de Europa sin cuestionar su adecuación al trópico. El resultado: edificios con vidrio en ciudades donde el sol cae perpendicular todo el año.</p>
+        <p>No es ignorancia — es inercia. <strong>El aire acondicionado resuelve el confort inmediato y libera al arquitecto de pensar en la forma.</strong></p>
+        <div class="pquote"><p>"La arquitectura bioclimática no es estilo — es la negativa a tercerizar a las máquinas lo que la geometría, la orientación y los materiales ya podrían resolver."</p></div>
+        <h2 id="s2es">Lo que la ventilación cruzada realmente significa</h2>
+        <p>Necesitamos dos aperturas en paredes opuestas — una captando el viento dominante, otra liberando el aire calentado. En Salvador, los vientos dominantes vienen del sureste.</p>
+        <div class="hbox"><div class="hblbl">Dato relevante</div><p>Según el INMET, Salvador tiene vientos dominantes del SE con velocidad media de 3,8 m/s. Una apertura bien posicionada puede reducir la temperatura interior hasta 4°C sin ningún equipo mecánico.</p></div>
+        <div class="ad-block"><span>Espacio publicitario — Google AdSense</span></div>
+        <h2 id="s3es">Materiales locales como estrategia, no folclore</h2>
+        <p>El uso de materiales regionales es principalmente una decisión técnica. <strong>La piedra caliza, el bambú tratado y la cerámica artesanal tienen inercia térmica completamente diferente del hormigón convencional.</strong></p>
+        <h2 id="s4es">Geometría solar: la herramienta más infrautilizada</h2>
+        <p>Herramientas como Ladybug integradas en Grasshopper permiten probar múltiples escenarios antes de cerrar cualquier planta. Un arquitecto que todavía diseña sin simulación climática está, literalmente, adivinando.</p>
+        <div class="tags"><span class="tag">Arquitectura bioclimática</span><span class="tag">Diseño sostenible</span><span class="tag">Salvador</span><span class="tag">Ventilación natural</span></div>
+        <div class="prod-rec">
+          <div class="prod-rec-label">Herramientas que uso y recomiendo</div>
+          <div class="prod-cards">
+            <a class="prod-card" href="SEU_LINK_AFILIADO" target="_blank" rel="noopener sponsored"><div class="prod-icon pi-green"><i class="ti ti-3d-cube-sphere" style="font-size:20px;color:#C8FF57;" aria-hidden="true"></i></div><div class="prod-name">Ladybug Tools</div><div class="prod-desc">Plugin gratuito para simulación climática en Rhino.</div><div class="prod-cta">Ver herramienta <svg viewBox="0 0 9 9" fill="none" aria-hidden="true"><path d="M1 8L8 1M8 1H3M8 1V6" stroke="currentColor" stroke-width="1.3"/></svg></div></a>
+            <a class="prod-card" href="SEU_LINK_AFILIADO" target="_blank" rel="noopener sponsored"><div class="prod-icon pi-blue"><i class="ti ti-book" style="font-size:20px;color:#57C8FF;" aria-hidden="true"></i></div><div class="prod-name">Arquitectura Bioclimática — Olgyay</div><div class="prod-desc">La referencia clásica sobre diseño climático.</div><div class="prod-cta">Ver en Amazon <svg viewBox="0 0 9 9" fill="none" aria-hidden="true"><path d="M1 8L8 1M8 1H3M8 1V6" stroke="currentColor" stroke-width="1.3"/></svg></div></a>
+            <a class="prod-card" href="SEU_LINK_AFILIADO" target="_blank" rel="noopener sponsored"><div class="prod-icon pi-orange"><i class="ti ti-sun" style="font-size:20px;color:#FF8A57;" aria-hidden="true"></i></div><div class="prod-name">Curso Confort Ambiental</div><div class="prod-desc">Formación online sobre ventilación natural e iluminación.</div><div class="prod-cta">Ver curso <svg viewBox="0 0 9 9" fill="none" aria-hidden="true"><path d="M1 8L8 1M8 1H3M8 1V6" stroke="currentColor" stroke-width="1.3"/></svg></div></a>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <aside class="pside">
+      <div class="sblk">
+        <div class="slbl" data-lang="pt">Neste post</div><div class="slbl" data-lang="en">In this post</div><div class="slbl" data-lang="es">En este post</div>
+        <div class="toci toc-a" onclick="tocClick(this,'s1')"><span class="tocn">01</span><span class="toct" data-lang="pt">O problema que ignoramos</span><span class="toct" data-lang="en">The problem we ignore</span><span class="toct" data-lang="es">El problema que ignoramos</span></div>
+        <div class="toci" onclick="tocClick(this,'s2')"><span class="tocn">02</span><span class="toct" data-lang="pt">Ventilação cruzada</span><span class="toct" data-lang="en">Cross-ventilation</span><span class="toct" data-lang="es">Ventilación cruzada</span></div>
+        <div class="toci" onclick="tocClick(this,'s3')"><span class="tocn">03</span><span class="toct" data-lang="pt">Materiais locais</span><span class="toct" data-lang="en">Local materials</span><span class="toct" data-lang="es">Materiales locales</span></div>
+        <div class="toci" onclick="tocClick(this,'s4')"><span class="tocn">04</span><span class="toct" data-lang="pt">Geometria solar</span><span class="toct" data-lang="en">Solar geometry</span><span class="toct" data-lang="es">Geometría solar</span></div>
+      </div>
+      <div class="sblk">
+        <div class="slbl" data-lang="pt">Compartilhar</div><div class="slbl" data-lang="en">Share</div><div class="slbl" data-lang="es">Compartir</div>
+        <button class="sitm" onclick="shareWhatsApp()"><i class="ti ti-brand-whatsapp" aria-hidden="true"></i> WhatsApp</button>
+        <button class="sitm" onclick="shareLinkedIn()"><i class="ti ti-brand-linkedin" aria-hidden="true"></i> LinkedIn</button>
+        <button class="sitm" onclick="copyLink()"><i class="ti ti-link" aria-hidden="true"></i>
+          <span data-lang="pt">Copiar link</span><span data-lang="en">Copy link</span><span data-lang="es">Copiar enlace</span>
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <div class="related">
+    <div class="rlbl" data-lang="pt">Continue lendo</div><div class="rlbl" data-lang="en">Keep reading</div><div class="rlbl" data-lang="es">Sigue leyendo</div>
+    <div class="rgrid">
+      <div class="rcard" onclick="go('post')">
+        <span class="rccat rct">Tech</span>
+        <div class="rctitle" data-lang="pt">IA generativa como ferramenta de projeto</div><div class="rctitle" data-lang="en">Generative AI as a design tool</div><div class="rctitle" data-lang="es">IA generativa como herramienta de diseño</div>
+        <div class="rctime" data-lang="pt">5 min de leitura</div><div class="rctime" data-lang="en">5 min read</div><div class="rctime" data-lang="es">5 min de lectura</div>
+      </div>
+      <div class="rcard" onclick="go('post')">
+        <span class="rccat rce" data-lang="pt">Empreendedorismo</span><span class="rccat rce" data-lang="en">Business</span><span class="rccat rce" data-lang="es">Negocios</span>
+        <div class="rctitle" data-lang="pt">Do escritório à startup</div><div class="rctitle" data-lang="en">From studio to startup</div><div class="rctitle" data-lang="es">Del estudio a la startup</div>
+        <div class="rctime" data-lang="pt">9 min de leitura</div><div class="rctime" data-lang="en">9 min read</div><div class="rctime" data-lang="es">9 min de lectura</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pnl">
+    <p class="pnley" data-lang="pt">— Não perca o próximo</p><p class="pnley" data-lang="en">— Don't miss the next one</p><p class="pnley" data-lang="es">— No te pierdas el próximo</p>
+    <h3 class="pnlt" data-lang="pt">Gostou? Assine o Fusion Lab</h3><h3 class="pnlt" data-lang="en">Enjoyed it? Subscribe to Fusion Lab</h3><h3 class="pnlt" data-lang="es">¿Te gustó? Suscríbete a Fusion Lab</h3>
+    <p class="pnls" data-lang="pt">Posts toda semana + briefs 3× por semana direto no seu e-mail</p>
+    <p class="pnls" data-lang="en">Weekly posts + briefs 3× a week straight to your inbox</p>
+    <p class="pnls" data-lang="es">Posts cada semana + briefs 3× por semana directo a tu correo</p>
+    <div class="pnlf">
+      <input class="pnli" type="email" placeholder="email@exemplo.com" />
+      <button class="pnlb" data-lang="pt">Assinar grátis</button><button class="pnlb" data-lang="en">Subscribe free</button><button class="pnlb" data-lang="es">Suscribirse gratis</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  var currentLang = 'pt';
+
+  function setLang(lang) {
+    currentLang = lang;
+    document.body.setAttribute('data-current-lang', lang);
+    document.querySelectorAll('.ltab').forEach(function(btn) {
+      btn.classList.toggle('active', btn.textContent.trim().toLowerCase() === lang);
+    });
+    var langMap = { pt: 'pt-BR', en: 'en', es: 'es' };
+    document.documentElement.lang = langMap[lang] || lang;
+  }
+
+  function go(page) {
+    document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+    document.getElementById('s-' + page).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function filterPill(el) {
+    var nr = el.closest('.nav-right');
+    if (nr) nr.querySelectorAll('.fpill').forEach(function(p) { p.classList.remove('active'); });
+    el.classList.add('active');
+  }
+
+  function tocClick(el, baseId) {
+    document.querySelectorAll('.toci').forEach(function(t) { t.classList.remove('toc-a'); });
+    el.classList.add('toc-a');
+    var suffix = currentLang === 'pt' ? '' : currentLang;
+    var target = document.getElementById(baseId + suffix) || document.getElementById(baseId);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  window.addEventListener('scroll', function() {
+    var prog = document.getElementById('prog');
+    if (!prog) return;
+    var postScreen = document.getElementById('s-post');
+    if (!postScreen.classList.contains('active')) { prog.style.width = '0%'; return; }
+    var article = postScreen.querySelector('.pbody');
+    if (!article) return;
+    var articleTop = article.getBoundingClientRect().top + window.scrollY;
+    var articleBottom = articleTop + article.offsetHeight;
+    var viewBottom = window.scrollY + window.innerHeight;
+    var pct = Math.max(0, Math.min(100, ((viewBottom - articleTop) / (articleBottom - articleTop)) * 100));
+    prog.style.width = pct + '%';
+  });
+
+  function shareWhatsApp() { window.open('https://wa.me/?text=' + encodeURIComponent('Fusion Lab — ' + window.location.href), '_blank'); }
+  function shareLinkedIn() { window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(window.location.href), '_blank'); }
+  function copyLink() {
+    navigator.clipboard.writeText(window.location.href).then(function() {
+      alert({ pt: 'Link copiado!', en: 'Link copied!', es: '¡Enlace copiado!' }[currentLang] || 'Copiado!');
+    });
+  }
+</script>
 </body>
 </html>
